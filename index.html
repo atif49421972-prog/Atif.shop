@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Shop | E-commerce</title>
+    <style>
+        :root { --primary: #2563eb; --dark: #0f172a; --gray: #f1f5f9; }
+        body { font-family: 'Inter', sans-serif; margin: 0; background-color: #fff; color: var(--dark); }
+        
+        /* Navigation */
+        nav { background: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+        .cart-icon { cursor: pointer; position: relative; font-weight: 600; }
+        #cart-count { background: red; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; position: absolute; top: -10px; right: -15px; }
+
+        /* Hero Section */
+        header { text-align: center; padding: 60px 20px; background: var(--gray); }
+        
+        /* Product Grid */
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; }
+        .product-card { border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; transition: transform 0.3s; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .product-img { width: 100%; height: 200px; background: #cbd5e1; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #64748b; }
+        .product-info { padding: 20px; }
+        .price { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+        .buy-btn { width: 100%; padding: 10px; background: var(--dark); color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+        .buy-btn:hover { background: var(--primary); }
+
+        /* Cart Sidebar */
+        #cart-sidebar { position: fixed; right: -400px; top: 0; width: 350px; height: 100%; background: white; box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: 0.3s; z-index: 1000; padding: 20px; display: flex; flex-direction: column; }
+        #cart-sidebar.active { right: 0; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">ATIF SHOP</div>
+    <div class="cart-icon" onclick="toggleCart()">🛒 Cart <span id="cart-count">0</span></div>
+</nav>
+
+<header>
+    <h1>Summer Collection 2026</h1>
+    <p>Premium quality products delivered to your door.</p>
+</header>
+
+<div class="container" id="product-list">
+    <!-- Products will be injected here by JavaScript -->
+</div>
+
+<div id="cart-sidebar">
+    <h2>Your Cart</h2>
+    <div id="cart-items" style="flex-grow: 1; overflow-y: auto;"></div>
+    <hr>
+    <h3>Total: $<span id="cart-total">0.00</span></h3>
+    <button class="buy-btn" style="background: #059669;" onclick="alert('Checkout integration required!')">Checkout Now</button>
+    <button class="buy-btn" onclick="toggleCart()" style="background: #64748b;">Close</button>
+</div>
+
+<script>
+    const products = [
+        { id: 1, name: "Wireless Headphones", price: 99.00, img: "🎧" },
+        { id: 2, name: "Smart Watch", price: 149.00, img: "⌚" },
+        { id: 3, name: "Premium Backpack", price: 75.00, img: "🎒" },
+        { id: 4, name: "Mechanical Keyboard", price: 120.00, img: "⌨️" }
+    ];
+
+    let cart = [];
+
+    function displayProducts() {
+        const list = document.getElementById('product-list');
+        list.innerHTML = products.map(p => `
+            <div class="product-card">
+                <div class="product-img">${p.img}</div>
+                <div class="product-info">
+                    <h3>${p.name}</h3>
+                    <p class="price">$${p.price.toFixed(2)}</p>
+                    <button class="buy-btn" onclick="addToCart(${p.id})">Add to Cart</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function addToCart(id) {
+        const product = products.find(p => p.id === id);
+        cart.push(product);
+        updateCart();
+    }
+
+    function updateCart() {
+        const cartList = document.getElementById('cart-items');
+        const count = document.getElementById('cart-count');
+        const total = document.getElementById('cart-total');
+        
+        count.innerText = cart.length;
+        cartList.innerHTML = cart.map((item, index) => `
+            <div class="cart-item">
+                <span>${item.name}</span>
+                <span>$${item.price.toFixed(2)}</span>
+            </div>
+        `).join('');
+
+        const sum = cart.reduce((acc, item) => acc + item.price, 0);
+        total.innerText = sum.toFixed(2);
+    }
+
+    function toggleCart() {
+        document.getElementById('cart-sidebar').classList.toggle('active');
+    }
+
+    displayProducts();
+</script>
+
+</body>
+</html>
